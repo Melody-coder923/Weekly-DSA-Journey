@@ -1,0 +1,198 @@
+### **1. Maximum Depth**
+
+**Problem**: Find the maximum depth of a binary tree (the longest path from the root node to the furthest leaf node, in terms of the number of nodes).
+**Solution**:
+- **Recursive**: `max(left subtree depth, right subtree depth) + 1`
+- **Iterative**: Use level-order traversal (BFS) to calculate the number of levels.
+```python
+def maxDepth(root):
+    if not root:
+        return 0
+    return max(maxDepth(root.left), maxDepth(root.right)) + 1
+```
+```python
+# BFS
+def maxDepth_iterative(root):
+    if not root:
+        return 0
+    from collections import deque
+    queue = deque([root])
+    depth = 0
+    while queue:
+        depth += 1
+        for _ in range(len(queue)):
+            node = queue.popleft()
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+    return depth
+```
+### **2. Minimum Depth**
+
+**Problem**: Find the minimum depth of a binary tree (the shortest path from the root node to the nearest leaf node, in terms of the number of nodes).
+**Key Point**: A leaf node is a node that does not have any children.
+**Trap of Minimum Depth**: When a node has only one child, special handling of the empty subtree is required to avoid incorrectly calculating the depth.
+```python
+def minDepth(root):
+    if not root:
+        return 0
+    if not root.left:
+        return minDepth(root.right) + 1
+    if not root.right:
+        return minDepth(root.left) + 1
+    return min(minDepth(root.left), minDepth(root.right)) + 1
+```
+```python
+# BFS More efficient: return as soon as a leaf node is encountered
+def minDepth_bfs(root):
+    if not root:
+        return 0
+    from collections import deque
+    queue = deque([(root, 1)])
+    while queue:
+        node, depth = queue.popleft()
+        if not node.left and not node.right:
+            return depth
+        if node.left:
+            queue.append((node.left, depth + 1))
+        if node.right:
+            queue.append((node.right, depth + 1))
+```
+### **3. Check if a Binary Tree is Balanced**
+
+**Problem**: Given a binary tree, determine if it is a **balanced binary tree**. A binary tree is considered balanced if, for every node, the height difference between its left and right subtrees does not exceed 1.
+
+**Solution**:
+
+- **Recursive Approach**:
+  - Check the height of the left and right subtrees of each node.
+  - If at any point, the height difference between the left and right subtrees exceeds 1, the tree is not balanced.
+  - The height of a subtree can be calculated recursively by checking the height of its left and right subtrees.
+
+- **Efficiency**:
+  - This problem can be solved efficiently in **O(n)** time complexity, where `n` is the number of nodes in the tree, by using a post-order traversal.
+
+```python
+class Solution:
+    def isBalanced(self, root: TreeNode) -> bool:
+        # Helper function: Recursively calculate the height of each subtree
+        def checkDepth(node):
+            # Base case: If the node is None, return height 0
+            if not node:
+                return 0
+
+            # Recursively calculate the height of the left and right subtrees
+            left_depth = checkDepth(node.left)
+            right_depth = checkDepth(node.right)
+
+            # If either subtree is unbalanced, or the height difference exceeds 1, return -1
+            if left_depth == -1 or right_depth == -1 or abs(left_depth - right_depth) > 1:
+                return -1
+
+            # Return the height of the current node (max of left and right subtrees' height + 1)
+            return max(left_depth, right_depth) + 1
+
+        # If the result is -1, the tree is unbalanced; otherwise, it's balanced
+        return checkDepth(root) != -1
+```
+```python
+#DFS
+class Solution:
+    def isBalanced(self, root: Optional[TreeNode]) -> bool:
+        def dfs(node):
+            if not node:
+                return True, 0
+            left_balanced, left_depth = dfs(node.left)
+            right_balanced, right_depth = dfs(node.right)
+            if not left_balanced or not right_balanced:
+                return False, 0
+            if abs(left_depth - right_depth) > 1:
+                return False, 0
+            return True, max(left_depth, right_depth) + 1
+        return dfs(root)[0]
+```
+### **4. Diameter of Binary Tree**
+
+**Problem**: Given a binary tree, find the longest path between any two nodes in the tree. The path length is the number of edges between the nodes.
+**Solution**:
+- The diameter of a binary tree is the longest path between any two nodes, which can either pass through the root or not.
+- To compute the diameter, we need to traverse the tree and for each node, calculate the sum of the depths of its left and right subtrees.
+- The longest path will be the one where the sum of the left and right subtree depths is maximum.
+
+**Approach**:
+- Use **Depth First Search (DFS)** to calculate the depth of the tree.
+- While doing the DFS, at each node, calculate the **longest path** that passes through that node, and update the global `max_diameter`.
+
+```python
+def diameterOfBinaryTree(root):
+    max_diameter = 0
+
+    def dfs(node):
+        nonlocal max_diameter
+        if not node:
+            return 0
+
+        left_depth = dfs(node.left)
+        right_depth = dfs(node.right)
+
+        # Update the maximum diameter (longest path passing through the current node)
+        max_diameter = max(max_diameter, left_depth + right_depth)
+
+        return max(left_depth, right_depth) + 1
+
+    dfs(root)
+    return max_diameter
+```
+
+### **5. Binary Tree Paths**
+
+**Problem**: Given a binary tree, find all paths from the root node to the leaf nodes. A path is defined as the sequence of nodes along the path from the root to a leaf node.
+**Solution**:
+- The task is to find all root-to-leaf paths in a binary tree.
+- We can use **Depth First Search (DFS)** to traverse the tree, and during the traversal, we keep track of the current path.
+- Once we reach a leaf node (a node with no left or right children), we add the path to the result
+
+**Approach**:
+- Perform a DFS starting from the root node.
+- Keep track of the current path and append the node’s value as you go deeper.
+- If you reach a leaf node, add the path to the result list.
+
+```python
+def binaryTreePaths(root):
+    if not root:
+        return []
+
+    result = []
+
+    def dfs(node, path):
+        if not node.left and not node.right:
+            # Reached a leaf node, add the path
+            result.append('->'.join(path + [str(node.val)]))
+            return
+
+        if node.left:
+            dfs(node.left, path + [str(node.val)])
+        if node.right:
+            dfs(node.right, path + [str(node.val)])
+
+    dfs(root, [])
+    return result
+```
+### **6. Path Sum**
+**Problem**: Determine if the tree has a root-to-leaf path such that the sum of all node values along the path equals the target sum.
+```python
+def hasPathSum(root, targetSum):
+    if not root:
+        return False
+
+    # If it's a leaf node, check if it equals the target sum
+    if not root.left and not root.right:
+        return root.val == targetSum
+
+    # Recursively check the left and right subtrees
+    remaining = targetSum - root.val
+    return (hasPathSum(root.left, remaining) or
+            hasPathSum(root.right, remaining))
+```
+
