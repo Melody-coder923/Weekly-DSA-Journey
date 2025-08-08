@@ -1,4 +1,4 @@
-#Binary Search
+## Binary Search
 
 while left<=right 
 ```
