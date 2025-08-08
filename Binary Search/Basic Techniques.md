@@ -1,4 +1,5 @@
 #Binary Search
+
 while left<=right 
 ```
 def binary_search(arr, target):
