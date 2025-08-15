@@ -99,7 +99,7 @@ class Solution:
             return memo[(x,y)]
         return dfs(m-1,n-1)
 ```
-
+DP
 ```
 class Solution:
     def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
@@ -124,3 +124,24 @@ class Solution:
                     dp[i][j]= dp[i-1][j]+dp[i][j-1]
         return dp[m-1][n-1]
 ```
+
+**LC64 Minimum Path Sum**
+
+Recursion+Memo
+```
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        m,n=len(grid),len(grid[0])
+        memo={}
+        def dfs(x,y):
+            if x>=m or y>=n:
+                return float('inf')
+            if (x, y) == (m-1, n-1):
+                return grid[x][y] 
+            if (x, y) in memo:
+                return memo[(x, y)]     
+            memo[(x, y)] = grid[x][y] + min(dfs(x+1, y), dfs(x, y+1))
+            return memo[(x, y)]
+        return dfs(0, 0)
+```
+
