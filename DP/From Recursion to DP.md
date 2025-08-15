@@ -75,3 +75,52 @@ class Solution:
                 dp[i][j]=dp[i-1][j]+dp[i][j-1]
         return dp[m-1][n-1]
 ```
+
+**LC63 Unique Paths II**
+
+Recursion+Memo
+```
+class Solution:
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        m,n=len(obstacleGrid),len(obstacleGrid[0])
+        if obstacleGrid[0][0]==1 or obstacleGrid[m-1][n-1]==1:
+            return 0
+        memo={}
+        def dfs(x,y):
+            if x < 0 or y < 0:
+                return 0
+            if obstacleGrid[x][y] == 1:
+                return 0
+            if (x, y) == (0, 0):
+                return 1
+            if (x,y) in memo:
+                return memo[(x,y)]
+            memo[(x, y)] = dfs(x-1, y) + dfs(x, y-1)
+            return memo[(x,y)]
+        return dfs(m-1,n-1)
+```
+
+```
+class Solution:
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        m,n=len(obstacleGrid),len(obstacleGrid[0])
+        dp=[[0]*n for _ in range(m)]
+        
+        for i in range(m):
+            if obstacleGrid[i][0]==1:
+                break
+            dp[i][0]=1
+
+        for j in range(n):
+            if obstacleGrid[0][j]==1:
+                break
+            dp[0][j]=1
+   
+        for i in range(1,m):
+            for j in range(1,n):
+                if obstacleGrid[i][j]==1:
+                    dp[i][j] = 0
+                else:
+                    dp[i][j]= dp[i-1][j]+dp[i][j-1]
+        return dp[m-1][n-1]
+```
