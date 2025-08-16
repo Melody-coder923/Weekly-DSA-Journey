@@ -235,3 +235,51 @@ class Solution:
                 matrix[i][j] += min(down, down_left, down_right)
         return min(matrix[0])
 ```
+
+**LC72 Edit Distance**
+Recursion+Memo
+```
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        m, n = len(word1), len(word2)
+        memo={}
+        def dfs(i,j):
+            if i == m:
+                return n - j 
+            if j == n:
+                return m - i 
+            if (i, j) in memo:
+                return memo[(i, j)]
+            if word1[i] == word2[j]:
+                memo[(i, j)] = dfs(i + 1, j + 1)
+            else:
+                insert_op = 1 + dfs(i, j + 1)    # 插入word2[j]
+                delete_op = 1 + dfs(i + 1, j)    # 删除word1[i]
+                replace_op = 1 + dfs(i + 1, j + 1)  # 替换word1[i]为word2[j]
+                memo[(i, j)] = min(insert_op, delete_op, replace_op)
+            return memo[(i, j)]
+        return dfs(0, 0)
+```
+DP
+```
+def minDistance(word1: str, word2: str) -> int:
+    m, n = len(word1), len(word2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    # 初始化边界
+    for i in range(m + 1):
+        dp[i][0] = i
+    for j in range(n + 1):
+        dp[0][j] = j
+    # 迭代计算
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if word1[i-1] == word2[j-1]:
+                dp[i][j] = dp[i-1][j-1]
+            else:
+                dp[i][j] = 1 + min(
+                    dp[i-1][j],    # 删除
+                    dp[i][j-1],    # 插入
+                    dp[i-1][j-1]   # 替换
+                )
+    return dp[m][n]
+```
