@@ -163,3 +163,34 @@ class Solution:
                 dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])
         return dp[m-1][n-1]
 ```
+
+**Leetcode 120（Triangle）**
+
+Recursion+Memo Up-Bottom
+```
+class Solution:
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        memo = {}
+        def dfs(x, y):
+            if x == len(triangle) - 1:
+                return triangle[x][y]
+            if (x, y) in memo:
+                return memo[(x, y)]
+            memo[(x, y)] = triangle[x][y] + min(dfs(x+1, y), dfs(x+1, y+1))
+            return memo[(x, y)]
+        return dfs(0,0)
+```
+
+```
+class Solution:
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        n = len(triangle)
+
+        # 从倒数第二行开始往上推
+        for i in range(n - 2, -1, -1):
+            for j in range(len(triangle[i])):
+                triangle[i][j] += min(triangle[i+1][j], triangle[i+1][j+1])
+
+        # 顶部元素现在是最终答案
+        return triangle[0][0]
+```
