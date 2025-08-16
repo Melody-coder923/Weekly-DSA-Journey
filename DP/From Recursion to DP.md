@@ -180,7 +180,7 @@ class Solution:
             return memo[(x, y)]
         return dfs(0,0)
 ```
-
+DP
 ```
 class Solution:
     def minimumTotal(self, triangle: List[List[int]]) -> int:
@@ -193,4 +193,45 @@ class Solution:
 
         # 顶部元素现在是最终答案
         return triangle[0][0]
+```
+
+**LC931 Minimum Falling Path Sum**
+
+Recursion+Memo
+```
+class Solution:
+    def minFallingPathSum(self, matrix: List[List[int]]) -> int:
+        memo = {}
+
+        def dfs(x, y):
+            if y < 0 or y >= len(matrix[0]):
+                return float("inf")
+            if x == len(matrix) - 1:
+                return matrix[x][y]
+            if (x, y) in memo:
+                return memo[(x, y)]
+            memo[(x, y)] = matrix[x][y] + min(
+                dfs(x + 1, y),
+                dfs(x + 1, y + 1),
+                dfs(x + 1, y - 1)
+            )
+            return memo[(x, y)]
+
+        res = []
+        for y in range(len(matrix[0])):
+            res.append(dfs(0, y))
+        return min(res)
+```
+
+DP
+```
+class Solution:
+    def minFallingPathSum(self, matrix: List[List[int]]) -> int:
+        for i in range(len(matrix)-2, -1, -1):       # 从倒数第二行往上
+            for j in range(len(matrix[0])):
+                down = matrix[i+1][j]
+                down_left = matrix[i+1][j-1] if j-1 >= 0 else float('inf')
+                down_right = matrix[i+1][j+1] if j+1 < len(matrix[0]) else float('inf')
+                matrix[i][j] += min(down, down_left, down_right)
+        return min(matrix[0])
 ```
