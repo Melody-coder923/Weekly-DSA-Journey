@@ -26,7 +26,11 @@ def find_first_gt(nums, target):
         else:
             #ans = mid   第一个满足nums[mid]>=target条件的位置(过程中一直在更新),整个程序结束会=left,但是过程中left会动态变化,两个没有关系. 这里是提示过程观察调试可以用,实际代码不要写
             right = mid - 1
-    return left  # left 就是第一个 >=target 的位置 
+    # 判断是否存在目标值
+    if left < 0 or left >= len(nums):
+        return -1
+    # 判断找到的左边界是否是目标值
+    return left if nums[left] == target else -1   # left 就是第一个 >=target 的位置 
 ```
 
 lower_bound(nums, target)
@@ -40,6 +44,10 @@ def find_last_le(nums, target):
             left = mid + 1 #这里的符号很重要, 如果求right是最后一个<target的位置,而不是本题的<=就需要修改
         else:
             right = mid - 1
-    return right  # right 就是最后一个 <= target 的位置
+    # 判断是否存在目标值
+    if right < 0 or right >= len(nums):
+        return -1
+    # 判断找到的右边界是否是目标值
+    return right if nums[right] == target else -1  # right 就是最后一个 <= target 的位置
 ```
 <img width="1574" height="618" alt="image" src="https://github.com/user-attachments/assets/cb87f9bf-2d8d-4072-8259-e99d15fea168" />
