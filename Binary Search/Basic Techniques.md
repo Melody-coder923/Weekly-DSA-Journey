@@ -32,6 +32,28 @@ def find_first_gt(nums, target):
     # 判断找到的左边界是否是目标值
     return left if nums[left] == target else -1   # left 就是第一个 >=target 的位置 
 ```
+如果用左闭有开方法,就不需要要最后的判断部分
+```
+def left_bound(nums: List[int], target: int) -> int:
+    left = 0
+    # 注意
+    right = len(nums)
+    
+    # 注意
+    while left < right:
+        mid = left + (right - left) // 2
+        if nums[mid] == target:
+            right = mid
+        elif nums[mid] < target:
+            left = mid + 1
+        elif nums[mid] > target:
+            # 注意
+            right = mid
+
+    return left
+```
+
+
 
 lower_bound(nums, target)
 ```
@@ -49,5 +71,22 @@ def find_last_le(nums, target):
         return -1
     # 判断找到的右边界是否是目标值
     return right if nums[right] == target else -1  # right 就是最后一个 <= target 的位置
+```
+
+如果写左闭右开,就不需要写最后的判断部分
+```
+def right_bound(nums, target):
+    left, right = 0, len(nums)
+    while left < right:
+        mid = left + (right - left) // 2
+        if nums[mid] == target:
+            # 注意
+            left = mid + 1
+        elif nums[mid] < target:
+            left = mid + 1
+        elif nums[mid] > target:
+            right = mid
+    # 注意
+    return left - 1
 ```
 <img width="1574" height="618" alt="image" src="https://github.com/user-attachments/assets/cb87f9bf-2d8d-4072-8259-e99d15fea168" />
