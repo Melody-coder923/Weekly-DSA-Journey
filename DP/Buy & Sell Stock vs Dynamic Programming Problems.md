@@ -24,3 +24,19 @@ Stock problems are **state machine DP problems**, typically tracking actions acr
 | **Input**   | `prices: List[int]` — stock price for each day |
 | **Goal**    | Maximize profit under constraints (e.g. 1 transaction, multiple transactions, cooldown, fees, etc.) |
 | **States**  | Track `buy`, `sell`, sometimes with `k` transactions or cooldown |
+
+
+121. Best Time to Buy and Sell Stock
+```
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        left=0
+        maxprofit=0
+        for right in range(1,len(prices)):
+            if prices[right]>prices[left]:
+               maxprofit=max(prices[right]-prices[left],maxprofit)
+            else:
+               left=right
+        return maxprofit
+```
+     
