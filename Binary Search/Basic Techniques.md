@@ -17,7 +17,7 @@ def binary_search(arr, target):
 
 upper_bound(nums, target)
 ```
-def find_first_gt(nums, target):
+def find_first_ge(nums, target):
     left, right = 0, len(nums) - 1
     while left <= right:
         mid = (left + right) // 2
@@ -27,11 +27,29 @@ def find_first_gt(nums, target):
             #ans = mid   第一个满足nums[mid]>=target条件的位置(过程中一直在更新),整个程序结束会=left,但是过程中left会动态变化,两个没有关系. 这里是提示过程观察调试可以用,实际代码不要写
             right = mid - 1
     # 判断是否存在目标值
-    if left < 0 or left >= len(nums):
+    if left >= len(nums):
         return -1
     # 判断找到的左边界是否是目标值
     return left if nums[left] == target else -1   # left 就是第一个 >=target 的位置 
 ```
+
+更容易理解版本,上面版本是把下面版本融合了
+```
+def find_first_ge(nums, target):
+    left, right = 0, len(nums) - 1
+    while left<=right:
+        mid=left+(right-left)//2
+        if nums[mid]>target:
+            right=mid-1
+        elif nums[mid]<target:
+            left=mid+1
+        else:
+            right=mid-1
+    if left >= len(nums) or nums[left] < target:  # 越界或找不到
+        return -1
+    return left
+```
+
 如果用左闭有开方法,就不需要要最后的判断部分
 ```
 def left_bound(nums: List[int], target: int) -> int:
